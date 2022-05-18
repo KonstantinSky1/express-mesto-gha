@@ -20,9 +20,9 @@ app.use('/', require('./routes/users'));
 
 app.use('/', require('./routes/cards'));
 
-app.use('*', (_, res) => res.status(404).send({ message: 'Запрашиваемая страница не найдена' }));
-
 mongoose.connect('mongodb://localhost:27017/mestodb');
+
+app.use('*', (_, res) => res.status(404).send({ message: 'Запрашиваемая страница не найдена' }));
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
