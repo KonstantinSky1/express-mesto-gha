@@ -36,7 +36,13 @@ const deleteCard = (req, res) => {
 
       return res.send({ data: card });
     })
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(404).send({ message: 'id карточки некорректен' });
+      }
+
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 const likeCard = (req, res) => {
@@ -45,8 +51,20 @@ const likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'в БД нет карточки с таким id' });
+      }
+
+      return res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'некорректен id карточки' });
+      }
+
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 const dislikeCard = (req, res) => {
@@ -55,8 +73,20 @@ const dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        return res.status(404).send({ message: 'в БД нет карточки с таким id' });
+      }
+
+      return res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'некорректен id карточки' });
+      }
+
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 module.exports = {

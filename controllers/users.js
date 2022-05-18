@@ -35,7 +35,13 @@ const getUser = (req, res) => {
 
       return res.send({ data: user });
     })
-    .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res.status(400).send({ message: 'id некорректен' });
+      }
+
+      return res.status(500).send({ message: 'На сервере произошла ошибка' });
+    });
 };
 
 const updateUser = (req, res) => {

@@ -20,7 +20,7 @@ app.use('/', require('./routes/users'));
 
 app.use('/', require('./routes/cards'));
 
-app.get('*', (_, res) => res.status(404).send({ message: 'Запрашиваемая страница не найдена' }));
+app.use('*', (_, res) => res.status(404).send({ message: 'Запрашиваемая страница не найдена' }));
 
 mongoose.connect('mongodb://localhost:27017/mestodb');
 
