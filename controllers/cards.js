@@ -34,7 +34,7 @@ const deleteCard = (req, res) => {
         return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
       }
 
-      res.send({ data: card });
+      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
