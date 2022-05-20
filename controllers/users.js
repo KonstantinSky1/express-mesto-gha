@@ -16,13 +16,7 @@ const createUser = (req, res) => {
 
 const getUsers = (_, res) => {
   User.find({})
-    .then((users) => {
-      if (users.length === 0) {
-        return res.status(404).send({ message: 'Запрашиваемые пользователи не найдены' });
-      }
-
-      return res.send({ data: users });
-    })
+    .then((users) => res.send({ data: users }))
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
@@ -56,7 +50,6 @@ const updateUser = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => res.send({ data: user }))
@@ -80,7 +73,6 @@ const updateAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true,
     },
   )
     .then((user) => res.send({ data: user }))

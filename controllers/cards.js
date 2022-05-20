@@ -3,13 +3,7 @@ const Card = require('../models/card');
 const getCards = (_, res) => {
   Card.find({})
     .populate('owner')
-    .then((cards) => {
-      if (cards.length === 0) {
-        return res.status(404).send({ message: 'Запрашиваемые карточки не найдены' });
-      }
-
-      return res.send({ data: cards });
-    })
+    .then((cards) => res.send({ data: cards }))
     .catch(() => res.status(500).send({ message: 'На сервере произошла ошибка' }));
 };
 
