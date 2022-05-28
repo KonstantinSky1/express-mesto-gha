@@ -22,13 +22,16 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (!card) {
-        return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+      switch (true) {
+        case !card :
+          return res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+        case req.user._id !== JSON.stringify(card.owner).slice(1, -1) :
+          return res.send({ message: 'Невозможно удалить чужую карточку' });
+        default :
+          return card.remove().then(() => res.send({ data: card }));
       }
-
-      return res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
