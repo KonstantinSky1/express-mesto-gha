@@ -1,16 +1,12 @@
 const jwt = require('jsonwebtoken');
 
-const handleAuthError = (res) => {
-  res
-    .status(401)
-    .send({ message: 'Необходима авторизация' });
-};
+const UnauthorizedError = require('../errors/unauthorized');
 
-module.exports = (req, res, next) => {
+module.exports = (req, __, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return handleAuthError(res);
+    throw new UnauthorizedError('Необходима авторизация');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -19,20 +15,10 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, 'super-strong-secret');
   } catch (err) {
-    return handleAuthError(res);
+    return next(new UnauthorizedError('Необходима авторизация'));
   }
 
   req.user = payload;
 
   next();
 };
-
-
-// При успешной авторизации в объекте запроса появится свойство user, в которое запишется пейлоуд токена. Его можно использовать в обработчиках:
-//  controllers/cards.js
-
-// module.exports.createCard = (req, res) => Card.create({
-//   name: req.body.name,
-//   link: req.body.link,
-//   owner: req.user._id // используем req.user
-// });
