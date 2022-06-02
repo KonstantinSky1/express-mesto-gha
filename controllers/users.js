@@ -16,13 +16,7 @@ const login = (req, res, next) => {
 
       res.send({ token });
     })
-    .catch((err) => {
-      if (err.name === 'Error') {
-        return next(new UnauthorizedError('Неверные почта или пароль'));
-      }
-
-      return next(err);
-    });
+    .catch(() => next(new UnauthorizedError('Неверные почта или пароль')));
 };
 
 const createUser = (req, res, next) => {

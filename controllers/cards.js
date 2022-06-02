@@ -30,7 +30,7 @@ const deleteCard = (req, res, next) => {
       switch (true) {
         case !card
           : throw new NotFoundError('Запрашиваемая карточка не найдена');
-        case req.user._id !== JSON.stringify(card.owner).slice(1, -1)
+        case !card.owner.equals(req.user._id)
           : throw new ForbiddenError('Невозможно удалить чужую карточку');
         default
           : return card.remove().then(() => res.send({ data: card }));
