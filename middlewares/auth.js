@@ -20,5 +20,5 @@ module.exports = (req, __, next) => {
 
   req.user = payload;
 
-  next();
+  return next();
 };
